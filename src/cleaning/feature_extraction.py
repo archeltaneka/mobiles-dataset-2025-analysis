@@ -86,6 +86,11 @@ def convert_internal_memory_to_gb(df):
     return df
 
 
+def extract_model_series(df):
+    df['model_series'] = df['company_name'] + ' ' + df['model'] + ' ' + df['series']
+    return df
+
+
 def extract_features_from_model_name(df):
     df = extract_launched_price(df)
     df = extract_screen_size(df)
@@ -94,5 +99,6 @@ def extract_features_from_model_name(df):
     df = extract_ram(df)
     df = extract_weight(df)
     df = df.drop('model_name', axis=1)
+    df = extract_model_series(df)
 
     return df
