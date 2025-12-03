@@ -217,16 +217,42 @@ with tab1:
         x_vals = np.linspace(filtered_df[price_col].min(), filtered_df[price_col].max(), 200)
         y_vals = kde(x_vals)
 
+        # Scale KDE to histogram
+        bin_width = (filtered_df[price_col].max() - filtered_df[price_col].min()) / 50
+        y_vals_scaled = y_vals * len(filtered_df[price_col]) * bin_width
+
         kde_line = go.Scatter(
             x=x_vals,
-            y=y_vals * len(filtered_df[price_col]) * ( (filtered_df[price_col].max() - filtered_df[price_col].min()) / 50 ),
+            y=y_vals_scaled,
             mode="lines",
             name="KDE",
-            line=dict(color="#E44C5A", width=2)
+            line=dict(color="#CF5699", width=2)
         )
 
-        # Combine them
+        # Create figure
         fig = go.Figure(data=[hist, kde_line])
+
+        # Mean price
+        mean_price = filtered_df[price_col].mean()
+
+        # Vertical long-dashed line
+        fig.add_shape(
+            type="line",
+            x0=mean_price, x1=mean_price,
+            y0=0, y1=y_vals_scaled.max(),
+            line=dict(color="#E44C5A", width=2, dash="longdash")
+        )
+
+        # Annotation (no arrow)
+        fig.add_annotation(
+            x=mean_price,
+            y=y_vals_scaled.max(),
+            text=f"Mean price = {selected_currency.split('(')[0].strip()} {mean_price:,.0f}",
+            showarrow=False,
+            yshift=10,
+            font=dict(color="#E44C5A", size=16, weight='bold')
+        )
+
         fig.update_layout(
             height=400,
             showlegend=False,
@@ -254,10 +280,14 @@ with tab1:
         x=proc_manuf_counts.index,
         y=proc_manuf_counts.values,
         labels={'x': 'Processor Manufacturer', 'y': 'Count'},
-        color=proc_manuf_counts.values,
-        color_continuous_scale='Viridis'
+        text=proc_manuf_counts.values
     )
-    fig.update_layout(height=350, showlegend=False)
+    fig.update_traces(
+        marker_color='#3b82f6',  # Solid color instead of gradient
+        textposition='outside',   # Position text outside the bars
+        textfont=dict(size=10)
+    )
+    fig.update_layout(height=400, showlegend=False)
     st.plotly_chart(fig, use_container_width=True)
 
 with tab2:
