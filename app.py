@@ -89,7 +89,7 @@ manufacturers = ['All'] + sorted(df['company_name'].unique().tolist())
 selected_manufacturer = st.sidebar.selectbox('company_name', manufacturers)
 
 # Budget tier filter
-budget_tiers = ['All', 'Budget', 'Mid-Range', 'Flagship']
+budget_tiers = ['All', 'Budget', 'Mid', 'Flagship']
 selected_tier = st.sidebar.selectbox('Budget Tier', budget_tiers)
 
 # Year filter
@@ -112,7 +112,7 @@ if selected_manufacturer != 'All':
     filtered_df = filtered_df[filtered_df['company_name'] == selected_manufacturer]
 
 if selected_tier != 'All':
-    filtered_df = filtered_df[filtered_df['Budget_Tier'] == selected_tier]
+    filtered_df = filtered_df[filtered_df['phone_cluster'] == selected_tier]
 
 if 'All' not in selected_year:
     filtered_df = filtered_df[filtered_df['Year'].isin(selected_year)]
@@ -232,10 +232,8 @@ with tab1:
         # Create figure
         fig = go.Figure(data=[hist, kde_line])
 
-        # Mean price
+        # Vertical dashed line for mean price
         mean_price = filtered_df[price_col].mean()
-
-        # Vertical long-dashed line
         fig.add_shape(
             type="line",
             x0=mean_price, x1=mean_price,
@@ -243,7 +241,7 @@ with tab1:
             line=dict(color="#E44C5A", width=2, dash="longdash")
         )
 
-        # Annotation (no arrow)
+        # Annotation
         fig.add_annotation(
             x=mean_price,
             y=y_vals_scaled.max(),
@@ -325,13 +323,14 @@ with tab2:
     with col2:
         # Price vs selected spec
         st.subheader(f"Price vs {selected_spec}")
-        fig = px.scatter(
+        fig = px.density_heatmap(
             filtered_df,
             x=spec_col,
             y=price_col,
-            color='company_name',
-            labels={spec_col: selected_spec, price_col: 'Price'},
-            hover_data=['model', 'launched_year']
+            nbinsx=30,
+            nbinsy=30,
+            labels={spec_col: selected_spec, price_col: "Price"},
+            color_continuous_scale="Blackbody"
         )
         fig.update_layout(height=400)
         st.plotly_chart(fig, use_container_width=True)
@@ -372,22 +371,22 @@ with tab3:
     # Budget tier selector for value analysis
     value_tier = st.radio(
         "Select Budget Tier",
-        ['All', 'Budget (<$400)', 'Mid-Range ($400-$800)', 'Flagship ($800+)'],
+        ['All', 'Budget (<$250)', 'Mid-Range (\$250-\$600)', 'Flagship ($600+)'],
         horizontal=True
     )
     
     # Filter based on tier
     value_df = filtered_df.copy()
-    if value_tier == 'Budget (<$400)':
+    if value_tier == 'Budget (<$250)':
         value_df = value_df[value_df['phone_cluster'] == 'Budget']
-    elif value_tier == 'Mid-Range ($400-$800)':
-        value_df = value_df[value_df['phone_cluster'] == 'Mid-Range']
-    elif value_tier == 'Flagship ($800+)':
+    elif value_tier == 'Mid-Range (\$250-\$600)':
+        value_df = value_df[value_df['phone_cluster'] == 'Mid']
+    elif value_tier == 'Flagship ($600+)':
         value_df = value_df[value_df['phone_cluster'] == 'Flagship']
     
     # Top 10 value phones
     top_value = value_df.nlargest(10, 'Value_Score')[
-        ['company_name', 'model', price_col, 'ram', 'internal_memory', 
+        ['model_series', price_col, 'ram', 'internal_memory', 
          'battery_capacity', 'back_camera', 'Value_Score']
     ].reset_index(drop=True)
     
@@ -398,7 +397,7 @@ with tab3:
     
     # Format the dataframe
     styled_df = top_value.copy()
-    styled_df.columns = ['company_name', 'model', price_col, 'ram', 'internal_memory', 
+    styled_df.columns = ['model_series', price_col, 'ram', 'internal_memory', 
                          'battery_capacity', 'back_camera', 'Value_Score']
     
     st.dataframe(
@@ -419,11 +418,11 @@ with tab3:
         fig = px.bar(
             top_value,
             x='Value_Score',
-            y='model',
+            y='model_series',
             orientation='h',
             color='Value_Score',
             color_continuous_scale='RdYlGn',
-            labels={'Value_Score': 'Value Score', 'model': ''}
+            labels={'Value_Score': 'Value Score', 'model_series': ''}
         )
         fig.update_layout(height=400, showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
@@ -435,8 +434,8 @@ with tab3:
             x=price_col,
             y='Value_Score',
             size='ram',
-            color='company_name',
-            hover_data=['model'],
+            # color='company_name',
+            hover_data=['model_series'],
             labels={price_col: 'Price', 'Value_Score': 'Value Score'}
         )
         fig.update_layout(height=400)
