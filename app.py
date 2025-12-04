@@ -31,7 +31,7 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
     .sub-header {
-        font-size: 1.1rem;
+        font-size: 20px !important;
         color: #6b7280;
         margin-bottom: 2rem;
     }
@@ -124,7 +124,25 @@ filtered_df = filtered_df[
 
 # Header
 st.markdown('<p class="main-header">📱 Smartphone Market Dashboard 2025</p>', unsafe_allow_html=True)
-st.markdown(f'<p class="sub-header">Interactive analysis of smartphone specifications and market trends</p>', unsafe_allow_html=True)
+st.markdown(
+    f'<p class="sub-header"> \
+    This interactive dashboard provides a comprehensive exploration of the 2025 smartphone market.\
+    </p>', 
+    unsafe_allow_html=True)
+st.markdown(
+    f'<p> \
+    Users can analyze device specifications, compare prices across segments, and discover insights \
+    into how different features influence a phone\'s value. The dataset is sourced from \
+    <a href="https://www.kaggle.com/datasets/abdulmalik1518/mobiles-dataset-2025">Kaggle</a> \
+    and includes detailed specs such as RAM, storage, cameras, screen size, battery capacity, \
+    weight, and launch price.\
+    Key features include price distribution analysis, value scoring, correlation insights, \
+    market segmentation (Budget, Mid-range, Flagship), and interactive comparisons across brands \
+    and device specifications.\n\n This dashboard aims to assist analysts, enthusiasts, and buyers \
+    in understanding market trends through clear and intuitive visualizations.\
+    </p>',
+    unsafe_allow_html=True
+)
 
 # Key metrics
 col1, col2, col3, col4 = st.columns(4)
@@ -364,9 +382,34 @@ with tab3:
     st.header("💎 Value-for-Money Analysis")
     
     st.markdown("""
-    These phones offer the best specifications relative to their price. 
-    The **Value Score** is calculated based on RAM, storage, battery capacity, and camera quality divided by price.
-    """)
+        These phones offer the best specifications relative to their price.  
+        The **Value Score** represents how much performance a device delivers for each dollar spent.
+
+        The score is built from a weighted combination of key specifications, giving higher importance to 
+        **RAM** and **internal storage**, while assigning smaller but meaningful weights to screen size, 
+        battery capacity, phone weight, and camera quality.
+
+        More formally:
+
+        $$
+        \\text{Spec Score} =
+        0.30 \\cdot \\text{RAM} +
+        0.30 \\cdot \\text{Internal Memory} +
+        0.08 \\cdot \\text{Screen Size} +
+        0.08 \\cdot \\text{Battery} +
+        0.08 \\cdot \\text{Weight} +
+        0.08 \\cdot \\text{Front Camera} +
+        0.08 \\cdot \\text{Back Camera}
+        $$
+
+        Finally, the **Value Score** normalizes this performance score by price:
+
+        $$
+        \\text{Value Score} = 
+        \\frac{\\text{Spec Score}}{\\text{Launched Price}}.
+        $$
+        """
+    )
     
     # Budget tier selector for value analysis
     value_tier = st.radio(
@@ -434,9 +477,10 @@ with tab3:
             x=price_col,
             y='Value_Score',
             size='ram',
-            # color='company_name',
-            hover_data=['model_series'],
-            labels={price_col: 'Price', 'Value_Score': 'Value Score'}
+            color='model_series',
+            hover_data={'ram': True, 'battery_capacity': True, price_col: ':,.0f'},
+            labels={price_col: 'Price', 'Value_Score': 'Value Score'},
+            size_max=25
         )
         fig.update_layout(height=400)
         st.plotly_chart(fig, use_container_width=True)
@@ -539,43 +583,77 @@ with tab4:
                 'back_camera', 'mobile_weight', price_col]
 
     # Compute correlation with price
-    corr_series = filtered_df[corr_cols].corr()[price_col].iloc[:-1]  # remove price itself
+    corr_series = filtered_df[corr_cols].corr()[price_col].iloc[:-1]
 
     corr_df = corr_series.reset_index()
     corr_df.columns = ['specification', 'price_correlation']
     corr_df['specification'] = ['RAM', 'Internal Memory', 'Battery Capacity', 'Screen Size', 'Back Camera', 'Mobile Weight']
 
-    # Sort correlations by magnitude for clearer presentation
+    # Sort by correlation strength
     corr_df = corr_df.sort_values('price_correlation', ascending=False)
 
-    # Create polar bar plot
+    # Convert to percentage for better readability
+    corr_df['correlation_pct'] = (corr_df['price_correlation'] * 100).round(1)
+
+    # Create enhanced polar bar plot (no `text=` here)
     fig = px.bar_polar(
         corr_df,
         r="price_correlation",
         theta="specification",
         color="price_correlation",
-        color_continuous_scale="Blackbody",
-        title="Specification Influence on Price",
+        color_continuous_scale=["#ef4444", "#fbbf24", "#10b981"],  # Red-Yellow-Green
+        hover_data={'price_correlation': ':.3f', 'correlation_pct': True}
     )
-    fig.update_layout(
-    height=550,
-    title="Specification Influence on Price",
-    polar=dict(
-        bgcolor="rgba(5,14,60,5)", 
-        radialaxis=dict(
-            showticklabels=False,   
-            ticks='',               
-            showline=False,         
+
+    # Add in-text labels and style traces
+    fig.update_traces(
+        text=corr_df['correlation_pct'].astype(str) + '%',
+        marker=dict(line=dict(color='white', width=2)),
+        hovertemplate=(
+            "<b>%{theta}</b><br>"
+            "Correlation: %{r:.3f}<br>"
+            "Percent: %{text}<extra></extra>"
         )
     )
-)
+
+    # Configure hover template for clarity
+    fig.update_traces(
+        hovertemplate='<b>%{theta}</b><br>Correlation: %{customdata[0]:.3f}<br>Percent: %{text}<extra></extra>',
+        # attach customdata for the hovertemplate (plotly will pick from hover_data if present)
+    )
+
+    # Make sure radial range isn't zero
+    max_r = max(corr_df['price_correlation'].max(), 0.01)
+    fig.update_layout(
+        height=550,
+        polar=dict(
+            bgcolor="rgba(17, 24, 39, 0.95)",
+            radialaxis=dict(
+                showticklabels=True,
+                tickfont=dict(size=10, color='white'),
+                gridcolor='rgba(255, 255, 255, 0.2)',
+                range=[0, max_r * 1.15]
+            ),
+            angularaxis=dict(
+                tickfont=dict(size=12, color='white', family='Arial'),
+                gridcolor='rgba(255, 255, 255, 0.2)',
+                linecolor='rgba(255, 255, 255, 0.3)'
+            )
+        ),
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(color='white'),
+        showlegend=False
+    )
+
     st.plotly_chart(fig, use_container_width=True)
+
 
 # Footer
 st.markdown("---")
-st.markdown("""
-<div style='text-align: center; color: #6b7280; padding: 1rem;'>
-    <p>📱 Smartphone Market Dashboard 2025 | Built with Streamlit & Plotly</p>
-    <p>Data reflects market trends and specifications as of 2025</p>
+st.markdown(f"""
+<div class="footer">
+    <p>📱 Smartphone Market Dashboard 2025</p>
+    <p>Built with Streamlit & Plotly • Data from Kaggle</p>
+    <p>© 2025 <strong>Archel Taneka Sutanto</strong>. All rights reserved.</p>
 </div>
 """, unsafe_allow_html=True)
