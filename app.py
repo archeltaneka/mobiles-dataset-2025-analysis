@@ -48,6 +48,12 @@ st.markdown("""
         height: 3rem;
         padding: 0 2rem;
     }
+    .footer {
+        text-align: center;
+        padding: 1.5rem 0;
+        color: #9ca3af;
+        font-size: 0.9rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
