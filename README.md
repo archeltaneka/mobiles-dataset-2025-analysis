@@ -26,5 +26,7 @@ Introducing my first analytic dashboard for the Mobiles Dataset 2025 that is dep
 - Run the app `streamlit run app.py`
 
 ## 🍿Video
+https://github.com/user-attachments/assets/da285d5b-0ec4-4b59-bc97-0c635f4f152c
+
 
 
