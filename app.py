@@ -115,7 +115,7 @@ if selected_tier != 'All':
     filtered_df = filtered_df[filtered_df['phone_cluster'] == selected_tier]
 
 if 'All' not in selected_year:
-    filtered_df = filtered_df[filtered_df['Year'].isin(selected_year)]
+    filtered_df = filtered_df[filtered_df['launched_year'].isin(selected_year)]
 
 filtered_df = filtered_df[
     (filtered_df[price_col] >= price_range[0]) & 
