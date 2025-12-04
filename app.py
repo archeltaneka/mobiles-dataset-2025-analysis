@@ -87,20 +87,46 @@ currency_map = {
     'PKR (₨)': 'launched_price_pakistan',
     'CNY (¥)': 'launched_price_china'
 }
-selected_currency = st.sidebar.selectbox('Currency', list(currency_map.keys()))
+selected_currency = st.sidebar.selectbox(
+    'Currency',
+    list(currency_map.keys()),
+    key="currency"
+)
 price_col = currency_map[selected_currency]
+
+# The widget defaults are only respected on the very first run of the script.
+# Once a user touches a widget, Streamlit stores its current value in st.session_state and 
+# ignores the default= / value= argument on every subsequent rerun.
+# Therefore "deleting the key" (or even overwriting it with the default) does not reset the 
+# slider/multiselect—the widget keeps the last user-chosen value until the browser page is hard-refreshed.
+if "reset_counter" not in st.session_state:
+    st.session_state.reset_counter = 0
+reset_suffix = f"_{st.session_state.reset_counter}"
 
 # Manufacturer filter
 manufacturers = ['All'] + sorted(df['company_name'].unique().tolist())
-selected_manufacturer = st.sidebar.selectbox('company_name', manufacturers)
+selected_manufacturer = st.sidebar.selectbox(
+    'company_name',
+    manufacturers,
+    key="manufacturer" + reset_suffix
+)
 
 # Budget tier filter
 budget_tiers = ['All', 'Budget', 'Mid', 'Flagship']
-selected_tier = st.sidebar.selectbox('Budget Tier', budget_tiers)
+selected_tier = st.sidebar.selectbox(
+    'Budget Tier',
+    budget_tiers,
+    key="budget_tier" + reset_suffix
+)
 
 # Year filter
 years = ['All'] + sorted(df['launched_year'].unique().tolist(), reverse=True)
-selected_year = st.sidebar.multiselect('Launch Year', years, default=['All'])
+selected_year = st.sidebar.multiselect(
+    'Launch Year',
+    years,
+    default=['All'],
+    key="launch_year" + reset_suffix
+)
 
 # Price range filter
 min_price, max_price = int(df[price_col].min()), int(df[price_col].max())
@@ -108,8 +134,14 @@ price_range = st.sidebar.slider(
     'Price Range',
     min_value=min_price,
     max_value=max_price,
-    value=(min_price, max_price)
+    value=(min_price, max_price),
+    key="price_range" + reset_suffix
 )
+
+# Reset filters, bump the reset counter and rerun the app
+if st.sidebar.button("🔄 Reset filters", use_container_width=True, type="primary"):
+    st.session_state.reset_counter += 1 
+    st.rerun()
 
 # Apply filters
 filtered_df = df.copy()
