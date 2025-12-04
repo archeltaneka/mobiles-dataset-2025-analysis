@@ -39,11 +39,11 @@ def cast_column_types(df):
     return df
 
 
-def remove_price_outliers(df):
+def clip_price_outliers(df):
     for col in df.columns:
         if col.startswith('launched_price'):
             df['lower_bound'] = df[col].quantile(0.05)
             df['upper_bound'] = df[col].quantile(0.95)
-            df = df[(df[col] >= df['lower_bound']) & (df[col] <= df['upper_bound'])]
+            df[col] = df[col].clip(lower=df['lower_bound'], upper=df['upper_bound'])
             
     return df

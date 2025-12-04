@@ -16,6 +16,6 @@ def clean_data(df, fill_na=True):
     if fill_na:
         df = fill_null_values(df)
     
-    df = remove_price_outliers(df)
+    df = clip_price_outliers(df)
 
     return df
