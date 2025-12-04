@@ -25,9 +25,9 @@ st.set_page_config(
 st.markdown("""
 <style>
     .main-header {
-        font-size: 2.5rem;
+        font-size: 42px !important;
         font-weight: bold;
-        color: #1f2937;
+        color: #D3C3C3;
         margin-bottom: 0.5rem;
     }
     .sub-header {
@@ -464,16 +464,30 @@ with tab4:
     with col2:
         # Price by manufacturer
         st.subheader("Average Price by Manufacturer")
-        avg_price_manuf = filtered_df.groupby('company_name')[price_col].mean().sort_values(ascending=False).head(10)
+        avg_price_manuf = filtered_df.groupby('company_name')[price_col].mean().sort_values(ascending=True).head(10)
         fig = px.bar(
             x=avg_price_manuf.values,
             y=avg_price_manuf.index,
             orientation='h',
-            labels={'x': 'Average Price', 'y': 'Manufacturer'},
-            color=avg_price_manuf.values,
-            color_continuous_scale='Reds'
+            labels={'x': f'Average Price ({selected_currency.split("(")[0].strip()})', 'y': 'Manufacturer'},
+            text=[f'{price:.1f}' for price in avg_price_manuf.values],
         )
         fig.update_layout(height=400, showlegend=False)
+        fig.update_traces(
+            marker_color='#3b82f6',  # Solid color instead of gradient
+            textposition='outside',   # Position text outside the bars
+            textfont=dict(size=10)
+        )
+        fig.update_layout(
+            height=400, 
+            showlegend=False,
+            xaxis=dict(
+                showgrid=True, 
+                gridcolor='rgba(200, 200, 200, 0.3)',  # Light gray with transparency
+                griddash='dash'  # Dashed grid lines
+            ),
+            yaxis=dict(showgrid=False)
+        )
         st.plotly_chart(fig, use_container_width=True)
     
     # Specification trends over time
@@ -518,22 +532,43 @@ with tab4:
     fig.update_layout(height=600)
     st.plotly_chart(fig, use_container_width=True)
     
-    # Correlation heatmap
-    st.subheader("Specifications vs Price Correlation")
-    
+    # Correlation polar bar visualization
+    st.subheader("Phone Specifications Effect on Price")
+
     corr_cols = ['ram', 'internal_memory', 'battery_capacity', 'screen_size', 
-                 'back_camera', 'mobile_weight', price_col]
-    corr_matrix = filtered_df[corr_cols].corr()
-    
-    fig = px.imshow(
-        corr_matrix,
-        labels=dict(color="Correlation"),
-        x=['RAM', 'Storage', 'Battery', 'Screen', 'Camera', 'Weight', 'Price'],
-        y=['RAM', 'Storage', 'Battery', 'Screen', 'Camera', 'Weight', 'Price'],
-        color_continuous_scale='RdBu_r',
-        aspect='auto'
+                'back_camera', 'mobile_weight', price_col]
+
+    # Compute correlation with price
+    corr_series = filtered_df[corr_cols].corr()[price_col].iloc[:-1]  # remove price itself
+
+    corr_df = corr_series.reset_index()
+    corr_df.columns = ['specification', 'price_correlation']
+    corr_df['specification'] = ['RAM', 'Internal Memory', 'Battery Capacity', 'Screen Size', 'Back Camera', 'Mobile Weight']
+
+    # Sort correlations by magnitude for clearer presentation
+    corr_df = corr_df.sort_values('price_correlation', ascending=False)
+
+    # Create polar bar plot
+    fig = px.bar_polar(
+        corr_df,
+        r="price_correlation",
+        theta="specification",
+        color="price_correlation",
+        color_continuous_scale="Blackbody",
+        title="Specification Influence on Price",
     )
-    fig.update_layout(height=500)
+    fig.update_layout(
+    height=550,
+    title="Specification Influence on Price",
+    polar=dict(
+        bgcolor="rgba(5,14,60,5)", 
+        radialaxis=dict(
+            showticklabels=False,   
+            ticks='',               
+            showline=False,         
+        )
+    )
+)
     st.plotly_chart(fig, use_container_width=True)
 
 # Footer
