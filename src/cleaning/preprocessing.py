@@ -25,12 +25,12 @@ def fill_null_values(df):
 
 def cast_column_types(df):
     df['mobile_weight'] = df['mobile_weight'].astype('float')
-    df['ram'] = df['ram'].astype('float')
+    df['ram'] = df['ram'].astype('int')
     df['front_camera'] = df['front_camera'].astype('int')
     df['back_camera'] = df['back_camera'].astype('int')
     df['battery_capacity'] = df['battery_capacity'].astype('int')
     df['screen_size'] = df['screen_size'].astype('float')
-    df['internal_memory'] = df['internal_memory'].astype('float')
+    df['internal_memory'] = df['internal_memory'].astype('int')
 
     for col in df.columns:
         if col.startswith('launched_price'):
