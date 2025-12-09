@@ -22,7 +22,7 @@ def extract_battery_capacity(df):
 
 
 def sum_back_camera_resolutions(s):
-    nums = s.str.extractall(r'(\d+)mp')[0].astype(float)
+    nums = s.str.extractall(r'(\d+)mp')[0].astype(int)
     return nums.groupby(level=0).sum()
 
 
