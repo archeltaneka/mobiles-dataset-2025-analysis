@@ -1,5 +1,8 @@
 # 📱Mobiles Dataset Analysis
 
+![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://archeltaneka-mobiles-dataset-2025-analysis-app-fz8tnw.streamlit.app/)
 ![Tests](https://github.com/archeltaneka/mobiles-dataset-2025-analysis/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/github/archeltaneka/mobiles-dataset-2025-analysis/graph/badge.svg?token=O061FNP8I4)](https://codecov.io/github/archeltaneka/mobiles-dataset-2025-analysis)
 
