@@ -1,5 +1,7 @@
 # 📱Mobiles Dataset Analysis
 
+![Tests](https://github.com/archeltaneka/mobiles-dataset-2025-analysis/actions/workflows/tests.yml/badge.svg)
+
 Introducing my first analytic dashboard for the Mobiles Dataset 2025 that is deployed using Streamlit. The dashboard uses a data from a [Kaggle](https://www.kaggle.com/datasets/abdulmalik1518/mobiles-dataset-2025) dataset and provides an interactive way to explore the dataset and gain insights into the smartphone market.
 
 ## 🛠️Tech Stack
