@@ -1,7 +1,7 @@
 # 📱Mobiles Dataset Analysis
 
 ![Tests](https://github.com/archeltaneka/mobiles-dataset-2025-analysis/actions/workflows/tests.yml/badge.svg)
-[![codecov](https://codecov.io/gh/archeltaneka/mobiles-dataset-2025-analysis/branch/main/graph/badge.svg)](https://codecov.io/gh/archeltaneka/mobiles-dataset-2025-analysis)
+[![codecov](https://codecov.io/github/archeltaneka/mobiles-dataset-2025-analysis/graph/badge.svg?token=O061FNP8I4)](https://codecov.io/github/archeltaneka/mobiles-dataset-2025-analysis)
 
 A fully interactive data exploration dashboard that transforms the messy 2025 smartphone dataset into clean insights, pricing intelligence, and trend visualizations.
 
