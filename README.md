@@ -99,10 +99,12 @@ mobiles-dataset-2025-analysis/
 └── tests
     ├── __init__.py
     ├── conftest.py
+    ├── test_clustering.py
     ├── test_data_loader.py
     ├── test_feature_extraction.py
     ├── test_pipeline.py
     ├── test_preprocessing.py
+    ├── test_scoring.py
 ```
 
 ## 🍿Demo Video
