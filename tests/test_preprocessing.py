@@ -15,7 +15,7 @@ def load_mock_data(sample_csv_path):
     return df
 
 
-def test_preprocessing(sample_csv_path):
+def test_standardize_col_names(sample_csv_path):
     df = load_mock_data(sample_csv_path)
     df = standardize_col_names(df)
     expected_cols = [
@@ -79,11 +79,11 @@ def test_cast_column_types(sample_csv_path):
     assert df['launched_price_china'].dtypes == 'float64'
     assert df['launched_price_usa'].dtypes == 'float64'
     assert df['launched_price_dubai'].dtypes == 'float64'
+    assert df['ram'].dtypes == 'float64'
+    assert df['internal_memory'].dtypes == 'float64'
 
-    assert df['ram'].dtypes == 'int64'
     assert df['front_camera'].dtypes == 'int64'
     assert df['back_camera'].dtypes == 'int64'
-    assert df['internal_memory'].dtypes == 'int64'
     assert df['battery_capacity'].dtypes == 'int64'
     assert df['launched_year'].dtypes == 'int64'
 
