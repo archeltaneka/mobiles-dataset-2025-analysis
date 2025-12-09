@@ -6,12 +6,12 @@ import pytest
 def sample_raw_dataframe():
     return pd.DataFrame({
         'Company Name': ['Samsung', 'Apple', 'Google', 'Oppo', 'Vivo', 'Xiaomi'],
-        'Model Name': ['Model A `256GB', 'Model B 128GB', 'Model C 1TB', 'Model D 64GB', 'Model E 2TB', 'Model F 512GB'],
+        'Model Name': ['Model A 256GB', 'Model B 128GB', 'Model C 1TB', 'Model D 64GB', 'Model E 2TB', 'Model F 512GB'],
         'Mobile Weight': ['144g', '129g', '156g', '129g', '144g', '129g'],
         'RAM': ['6GB', '8GB', '12GB', '6GB', '8GB', '12GB'],
         'Front Camera': ['8MP', '6MP', '6MP', '4MP', '10MP', '12MP'],
         'Back Camera': ['48MP', '48MP + 12MP', '16MP + 8MP', '8MP', '50MP + 12MP', '30MP + 16MP'],
-        'Processor': ['DEF', 'GHI', 'JKL', 'MNO', 'PQR', 'STU'],
+        'Processor': ['Snapdragon 8 Gen 1', 'Snapdragon 685', 'A17 Bionic', 'Exynos 1350', 'Mediatek Helio P35', 'Snapdragon 8 Gen 2'],
         'Battery Capacity': ['5,000mAh', '4,500mAh', '4,000mAh', '3,900mAh', '5,200mAh', '4,800mAh'],
         'Screen Size': ['6.4 inches', '6.1 inches', '6.2 inches', '6.3 inches', '6.4 inches', '6.5 inches'],
         'Launched Price (Pakistan)': ['PKR 320,000', 'PKR 480,000', 'PKR 520,000', 'PKR 600,000', 'PKR 650,000', 'PKR 700,000'],
