@@ -1,10 +1,59 @@
 # 📱Mobiles Dataset Analysis
 
 ![Tests](https://github.com/archeltaneka/mobiles-dataset-2025-analysis/actions/workflows/tests.yml/badge.svg)
+[![codecov](https://codecov.io/gh/archeltaneka/mobiles-dataset-2025-analysis/branch/main/graph/badge.svg)](https://codecov.io/gh/archeltaneka/mobiles-dataset-2025-analysis)
 
-Introducing my first analytic dashboard for the Mobiles Dataset 2025 that is deployed using Streamlit. The dashboard uses a data from a [Kaggle](https://www.kaggle.com/datasets/abdulmalik1518/mobiles-dataset-2025) dataset and provides an interactive way to explore the dataset and gain insights into the smartphone market.
+A fully interactive data exploration dashboard that transforms the messy 2025 smartphone dataset into clean insights, pricing intelligence, and trend visualizations.
+
+Built with Streamlit, Plotly, and a custom data-processing pipeline.
+
+🔗 Live App: https://archeltaneka-mobiles-dataset-2025-analysis-app-fz8tnw.streamlit.app/
+
+📂 Dataset: [Kaggle – Mobiles Dataset 2025](https://www.kaggle.com/datasets/abdulmalik1518/mobiles-dataset-2025)
+
+## 🚀 Highlights
+
+- Cleaned and processed 100+ smartphone attributes using a custom wrangling pipeline.
+- Created an interactive dashboard to explore market trends, pricing, and feature comparisons.
+- Implemented correlation analysis to understand which specs affect price.
+- Added automated tests + GitHub Actions CI + coverage reporting.
+- Fully deployed to Streamlit Cloud.
+
+## 🖥️ Key Features
+
+### 🔍 Smart Filters
+
+Explore the dataset by:
+- Manufacturer / brand
+- Budget tier
+- Launch year
+- Price range
+- Regional price (USD, INR, AED, PKR, CNY)
+
+### 📊 Visual Insights
+
+Includes:
+- Price distribution by brand
+- Feature comparisons
+- Radar & polar correlation charts
+- Trend analysis across years
+- Market segmentation visualizations
+
+### 🧠 Data Processing
+
+- Automated cleaning of camera resolution, weights, memory formats, etc.
+- Feature normalization and type consistency checks
+- Consistent schema transformations
+
+### 🧪 Testing & CI
+
+- Unit tests for all data-processing functions
+- Pytest + Coverage
+- GitHub Actions automated workflow
+- Codecov integration
 
 ## 🛠️Tech Stack
+
 - Python
 - Streamlit
 - Plotly
@@ -12,23 +61,60 @@ Introducing my first analytic dashboard for the Mobiles Dataset 2025 that is dep
 - NumPy
 - Scikit-learn
 
-## 📊Features
-- Interactive filters if user wants to explore the dataset based on different criteria such as manufacturer (brand), budget, launch year, and price range.
-- Interactive visualizations to explore the dataset and gain insights into the smartphone market.
-- Interactive comparison of different features of the smartphones.
-- Understand how smartphones are priced based on their features.
-- Understand how smartphones have evolved over the years.
-
 ## 📃Requirements
 - Python 3.10+
 
 ## 📦Installation
-- Clone the repository
-- Install the required packages `pip install -r requirements.txt`
-- Run the app `streamlit run app.py`
 
-## 🍿Video
+```
+git clone https://github.com/archeltaneka/mobiles-dataset-2025-analysis
+cd mobiles-dataset-2025-analysis
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+## 🗂 Project Structure
+
+```
+mobiles-dataset-2025-analysis/
+├── README.md
+├── app.py                              # streamlit app
+├── data    
+│   ├── Mobiles Dataset (2025).csv      # raw dataset
+├── requirements.txt
+├── src
+│   ├── analytics
+│   │   ├── __init__.py
+|   |   ├── clustering.py               # phone market segmentation
+|   |   ├── scoring.py                  # phone value-for-money scoring
+│   ├── cleaning
+│   │   ├── __init__.py
+│   │   ├── feature_extraction.py       # feature extraction
+│   │   ├── pipeline.py                 # data cleaning pipeline
+│   │   ├── preprocessing.py            # data preprocessing
+│   ├── data
+│   │   ├── __init__.py
+│   │   └── mobiles.py                  # data loader
+│   ├── __init__.py
+└── tests
+    ├── __init__.py
+    ├── conftest.py
+    ├── test_data_loader.py
+    ├── test_feature_extraction.py
+    ├── test_pipeline.py
+    ├── test_preprocessing.py
+```
+
+## 🍿Demo Video
+
 https://github.com/user-attachments/assets/da285d5b-0ec4-4b59-bc97-0c635f4f152c
 
+## 📄 License
+
+MIT License © 2025 Archel Taneka
+
+## ⚙️ Want to contribute?
+
+PRs, suggestions, and issues are welcome.
 
 
