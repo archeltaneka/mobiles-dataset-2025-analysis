@@ -5,3 +5,6 @@ plotly
 streamlit
 scikit-learn
 seaborn
+pytest 
+pytest-cov 
+coverage
