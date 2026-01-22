@@ -8,4 +8,4 @@ seaborn
 pytest 
 pytest-cov 
 coverage
-altair
+altair<5
